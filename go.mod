@@ -3,6 +3,7 @@ module github.com/Woringsuhang/user
 go 1.20
 
 require (
+	github.com/Woringsuhang/mess v0.0.0-20240226115103-1c7c8142486f // indirect
 	github.com/go-sql-driver/mysql v1.7.0 // indirect
 	github.com/golang/protobuf v1.5.3 // indirect
 	github.com/jinzhu/inflection v1.0.0 // indirect

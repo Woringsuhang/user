@@ -1,6 +1,8 @@
 github.com/BurntSushi/toml v0.3.1/go.mod h1:xHWCNGjB5oqiDr8zfno3MHue2Ht5sIBksp03qcyfWMU=
 github.com/Woringsuhang/mess v0.0.0-20240226092620-0fca077075dd h1:YdJ+uMXaV5vaKBBDlCLq4vMWxPQtkEBKFow0twgICFM=
 github.com/Woringsuhang/mess v0.0.0-20240226092620-0fca077075dd/go.mod h1:gfxi4DTmLnsSFo4buiU8xULAqZGk14nUCTcSrdgX9tY=
+github.com/Woringsuhang/mess v0.0.0-20240226115103-1c7c8142486f h1:FIlYW1mMpXmHOq8OJYPOhFmIc7n1fXmr0oOkfwdm3rk=
+github.com/Woringsuhang/mess v0.0.0-20240226115103-1c7c8142486f/go.mod h1:gfxi4DTmLnsSFo4buiU8xULAqZGk14nUCTcSrdgX9tY=
 github.com/aliyun/alibaba-cloud-sdk-go v1.61.18/go.mod h1:v8ESoHo4SyHmuB4b1tJqDHxfTGEciD+yhvOU/5s1Rfk=
 github.com/buger/jsonparser v1.1.1/go.mod h1:6RYKKt7H4d4+iWqouImQ9R2FZql3VbhNgx27UK13J/0=
 github.com/davecgh/go-spew v1.1.0/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
