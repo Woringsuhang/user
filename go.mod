@@ -20,4 +20,5 @@ require (
 	gopkg.in/natefinch/lumberjack.v2 v2.0.0 // indirect
 	gorm.io/driver/mysql v1.5.4 // indirect
 	gorm.io/gorm v1.25.7 // indirect
+	github.com/Woringsuhang/user 1c7c8142486f4089eec1fc575c413f11b0e8d442
 )
