@@ -14,7 +14,7 @@ import (
 func Consul() {
 	//create clientConfig
 	clientConfig := constant.ClientConfig{
-		NamespaceId:         "c789404a-00bb-4ae5-b1f3-91efb8d3c39c", //we can create multiple clients with different namespaceId to support multiple namespace.When namespace is public, fill in the blank string here.
+		NamespaceId:         "2bdf0290-9626-41e8-821f-00c954bc107e", //we can create multiple clients with different namespaceId to support multiple namespace.When namespace is public, fill in the blank string here.
 		TimeoutMs:           5000,
 		NotLoadCacheAtStart: true,
 		LogDir:              "/tmp/nacos/log",
