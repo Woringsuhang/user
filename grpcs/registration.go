@@ -6,14 +6,22 @@ import (
 	"github.com/Woringsuhang/user/global"
 	"go.uber.org/zap"
 	"google.golang.org/grpc"
+	"google.golang.org/grpc/credentials"
+
 	"google.golang.org/grpc/reflection"
+	"log"
 
 	"net"
 )
 
-func Registration(register func(g *grpc.Server)) error {
+func Registration(register func(g *grpc.Server), cert, key string) error {
 	flag.Parse()
-	g := grpc.NewServer()
+	//grpc中间件
+	creds, err := credentials.NewServerTLSFromFile(cert, key)
+	if err != nil {
+		log.Fatalf("failed to create credentials: %v", err)
+	}
+	g := grpc.NewServer(grpc.Creds(creds))
 
 	listen, err := net.Listen(global.ConfigAll.Grpc.Agreement, fmt.Sprintf(":%s", global.ConfigAll.Grpc.Port))
 	if err != nil {

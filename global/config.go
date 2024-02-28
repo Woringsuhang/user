@@ -13,5 +13,5 @@ type Config struct {
 	Grpc struct {
 		Agreement string `json:"agreement"`
 		Port      string `json:"port"`
-	} `json:"grpc"`
+	} `json:"register"`
 }
