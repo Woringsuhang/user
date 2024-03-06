@@ -1,6 +1,9 @@
 package global
 
-var ConfigAll Config
+var (
+	ConfigAll   *Config
+	NacosConfig *ConfigNa
+)
 
 type Config struct {
 	Mysql struct {
@@ -13,5 +16,12 @@ type Config struct {
 	Grpc struct {
 		Agreement string `json:"agreement"`
 		Port      string `json:"port"`
-	} `json:"register"`
+	} `json:"grpc"`
+}
+type ConfigNa struct {
+	NamespaceId string `mapstructure:"namespaceId"`
+	IpAddr      string `mapstructure:"ipAddr"`
+	Port        int    `mapstructure:"port"`
+	DataId      string `mapstructure:"dataId"`
+	Group       string `mapstructure:"group"`
 }
