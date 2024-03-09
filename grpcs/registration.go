@@ -21,7 +21,7 @@ func Registration(register func(g *grpc.Server), cert, key string) error {
 	//}
 	//grpc.Creds(creds)
 	g := grpc.NewServer()
-	listen, err := net.Listen(global.ConfigAll.Grpc.Agreement, fmt.Sprintf("0.0.0.0:%s", global.ConfigAll.Grpc.Port))
+	listen, err := net.Listen(global.ConfigAll.Grpc.Agreement, fmt.Sprintf("10.2.171.94:%s", global.ConfigAll.Grpc.Port))
 	if err != nil {
 		zap.S().Panic(err)
 	}
