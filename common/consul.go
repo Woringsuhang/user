@@ -15,7 +15,9 @@ var Srvid string
 func ConsulClient() error {
 	var err error
 
-	ConsulCli, err = api.NewClient(&api.Config{Address: "10.2.171.94"})
+	ConsulCli, err = api.NewClient(&api.Config{
+		Address: "10.2.171.94:8085",
+	})
 	if err != nil {
 		return errors.New("连接consul客户端失败！" + err.Error())
 	}
