@@ -18,6 +18,8 @@ func InitMysql() {
 	if err != nil {
 		panic(err)
 	}
+	Dbs, _ := DB.DB()
+	defer Dbs.Close()
 }
 
 func Tx(txFu func(tx *gorm.DB) error) {

@@ -34,7 +34,6 @@ func Nacos(dataId, group string) {
 			Scheme:      "http",
 		},
 	}
-
 	// Creat Nacos Service Discovery Client
 	namingClient, err := clients.CreateNamingClient(map[string]interface{}{
 		"serverConfigs": []constant.ServerConfig{

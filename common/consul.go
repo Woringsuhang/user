@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"github.com/google/uuid"
 	"github.com/hashicorp/consul/api"
+
 	"log"
 )
 
@@ -13,7 +14,8 @@ var Srvid string
 
 func ConsulClient() error {
 	var err error
-	ConsulCli, err = api.NewClient(api.DefaultConfig())
+
+	ConsulCli, err = api.NewClient(&api.Config{Address: "10.2.171.94"})
 	if err != nil {
 		return errors.New("连接consul客户端失败！" + err.Error())
 	}
