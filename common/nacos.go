@@ -53,7 +53,7 @@ func Nacos(dataId, group string) {
 	// Register Service Instance
 	success, err := namingClient.RegisterInstance(vo.RegisterInstanceParam{
 		Ip:          "10.2.171.94",
-		Port:        8080,
+		Port:        8085,
 		ServiceName: "2108a",
 		Weight:      1,
 		Enable:      true,
@@ -72,20 +72,16 @@ func Nacos(dataId, group string) {
 		"serverConfigs": serverConfigs,
 		"clientConfig":  clientConfig,
 	})
-	fmt.Println(global.NacosConfig.DataId)
-	fmt.Println(global.NacosConfig.Group)
 	config, err := configs.GetConfig(vo.ConfigParam{
 		DataId: dataId,
 		Group:  group,
 	})
-
+	fmt.Println(config)
 	if err != nil {
 		log.Printf("Error getting configuration")
 		return
 	}
 	err = json.Unmarshal([]byte(config), &global.ConfigAll)
-	fmt.Println(global.ConfigAll.Grpc.Port)
-	fmt.Println(global.NacosConfig)
 	//监听
 	err = configs.ListenConfig(vo.ConfigParam{
 		DataId: "configuration",
