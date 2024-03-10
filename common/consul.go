@@ -3,11 +3,10 @@ package common
 import (
 	"errors"
 	"fmt"
-	"github.com/Woringsuhang/user/grpcs"
 	"github.com/google/uuid"
 	"github.com/hashicorp/consul/api"
 	"log"
-	"strconv"
+	"net"
 )
 
 var ConsulCli *api.Client
@@ -24,23 +23,52 @@ func ConsulClient(addr string) error {
 	}
 	return nil
 }
+func GetIp() (string, error) {
+	interfaces, err := net.Interfaces()
+	if err != nil {
+		return "", err
+	}
 
+	for _, i := range interfaces {
+		addrs, err := i.Addrs()
+		if err != nil {
+			continue
+		}
+
+		for _, addr := range addrs {
+			ipNet, isVailIpNet := addr.(*net.IPNet)
+			if isVailIpNet && !ipNet.IP.IsLoopback() {
+				if ipNet.IP.To4() != nil {
+					// 添加一些额外的检测逻辑，例如判断IP地址是否在本地网络范围内
+					if ipNet.IP.IsGlobalUnicast() {
+						// 添加详细的日志输出
+						log.Printf("获取到的IP地址：%s，对应网络接口：%s\n", ipNet.IP.String(), i.Name)
+						return ipNet.IP.String(), nil
+					}
+				}
+			}
+		}
+	}
+
+	return "", errors.New("Unable to find a valid global unicast IP address")
+}
 func AgentService(Address string, Port int) error {
 	Srvid = uuid.New().String()
-	ip := grpcs.GetHostIp()
-	log.Println("获取的ip============================", ip[0])
+	ip, _ := GetIp()
+	log.Println("获取的ip============================", ip)
 	check := &api.AgentServiceCheck{
 		Interval:                       "5s",
 		Timeout:                        "5s",
-		GRPC:                           fmt.Sprintf("%s:%d", ip[0], Port),
+		GRPC:                           fmt.Sprintf("%v:%v", ip, Port),
 		DeregisterCriticalServiceAfter: "30s",
 	}
+	fmt.Println("wwwww", Port, ip)
 	err := ConsulCli.Agent().ServiceRegister(&api.AgentServiceRegistration{
 		ID:      Srvid,
 		Name:    "user_srv",
 		Tags:    []string{"GRPC"},
 		Port:    Port,
-		Address: strconv.Itoa(int(ip[0])),
+		Address: ip,
 		Check:   check,
 	})
 	if err != nil {
