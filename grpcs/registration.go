@@ -12,6 +12,23 @@ import (
 	"net"
 )
 
+func getHostIp() string {
+	addrList, err := net.InterfaceAddrs()
+	if err != nil {
+		fmt.Println("get current host ip err: ", err)
+		return ""
+	}
+	var ip string
+	for _, address := range addrList {
+		if ipNet, ok := address.(*net.IPNet); ok && !ipNet.IP.IsLoopback() {
+			if ipNet.IP.To4() != nil {
+				ip = ipNet.IP.String()
+				break
+			}
+		}
+	}
+	return ip
+}
 func Registration(register func(g *grpc.Server), cert, key string) error {
 	flag.Parse()
 	//grpc中间件
@@ -21,7 +38,8 @@ func Registration(register func(g *grpc.Server), cert, key string) error {
 	//}
 	//grpc.Creds(creds)
 	g := grpc.NewServer()
-	listen, err := net.Listen(global.ConfigAll.Grpc.Agreement, fmt.Sprintf("10.2.171.94:%s", global.ConfigAll.Grpc.Port))
+	ip := getHostIp()
+	listen, err := net.Listen(global.ConfigAll.Grpc.Agreement, fmt.Sprintf("%v:%s", ip, global.ConfigAll.Grpc.Port))
 	if err != nil {
 		zap.S().Panic(err)
 	}
