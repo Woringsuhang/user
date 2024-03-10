@@ -7,6 +7,7 @@ import (
 	"github.com/google/uuid"
 	"github.com/hashicorp/consul/api"
 	"log"
+	"strconv"
 )
 
 var ConsulCli *api.Client
@@ -27,11 +28,11 @@ func ConsulClient(addr string) error {
 func AgentService(Address string, Port int) error {
 	Srvid = uuid.New().String()
 	ip := grpcs.GetHostIp()
-	log.Println("获取的ip============================", ip)
+	log.Println("获取的ip============================", ip[0])
 	check := &api.AgentServiceCheck{
 		Interval:                       "5s",
 		Timeout:                        "5s",
-		GRPC:                           fmt.Sprintf("%s:%d", Address, Port),
+		GRPC:                           fmt.Sprintf("%s:%d", ip[0], Port),
 		DeregisterCriticalServiceAfter: "30s",
 	}
 	err := ConsulCli.Agent().ServiceRegister(&api.AgentServiceRegistration{
@@ -39,7 +40,7 @@ func AgentService(Address string, Port int) error {
 		Name:    "user_srv",
 		Tags:    []string{"GRPC"},
 		Port:    Port,
-		Address: Address,
+		Address: strconv.Itoa(int(ip[0])),
 		Check:   check,
 	})
 	if err != nil {
