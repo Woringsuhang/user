@@ -3,6 +3,7 @@ package common
 import (
 	"errors"
 	"fmt"
+	"github.com/Woringsuhang/user/grpcs"
 	"github.com/google/uuid"
 	"github.com/hashicorp/consul/api"
 
@@ -26,11 +27,11 @@ func ConsulClient() error {
 
 func AgentService(Address string, Port int) error {
 	Srvid = uuid.New().String()
-
+	ip := grpcs.GetHostIp()
 	check := &api.AgentServiceCheck{
 		Interval:                       "5s",
 		Timeout:                        "5s",
-		GRPC:                           fmt.Sprintf("%s:%d", Address, Port),
+		GRPC:                           fmt.Sprintf("%s:%d", ip, Port),
 		DeregisterCriticalServiceAfter: "30s",
 	}
 	err := ConsulCli.Agent().ServiceRegister(&api.AgentServiceRegistration{

@@ -12,7 +12,7 @@ import (
 	"net"
 )
 
-func getHostIp() string {
+func GetHostIp() string {
 	addrList, err := net.InterfaceAddrs()
 	if err != nil {
 		fmt.Println("get current host ip err: ", err)
@@ -38,7 +38,7 @@ func Registration(register func(g *grpc.Server), cert, key string) error {
 	//}
 	//grpc.Creds(creds)
 	g := grpc.NewServer()
-	ip := getHostIp()
+	ip := GetHostIp()
 	listen, err := net.Listen(global.ConfigAll.Grpc.Agreement, fmt.Sprintf("%v:%s", ip, global.ConfigAll.Grpc.Port))
 	if err != nil {
 		zap.S().Panic(err)
