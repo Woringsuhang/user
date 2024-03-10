@@ -18,9 +18,13 @@ type Config struct {
 		Port      string `json:"port"`
 	} `json:"grpc"`
 	Redis struct {
-		Address string `json:"address"`
-		Ip      string `json:"ip"`
-	} `json:"redis"`
+		Address string `json:"Address"`
+		Ip      string `json:"Ip"`
+	} `json:"Redis"`
+	Consul struct {
+		Host string `json:"host"`
+		Port int    `json:"port"`
+	} `json:"Consul"`
 }
 type ConfigNa struct {
 	NamespaceId string `mapstructure:"namespaceId"`
