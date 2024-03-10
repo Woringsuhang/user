@@ -31,7 +31,7 @@ func AgentService(Address string, Port int) error {
 	check := &api.AgentServiceCheck{
 		Interval:                       "5s",
 		Timeout:                        "5s",
-		GRPC:                           fmt.Sprintf("%s:%d", "10.2.171.94", Port),
+		GRPC:                           fmt.Sprintf("%s:%d", ip, Port),
 		DeregisterCriticalServiceAfter: "30s",
 	}
 	err := ConsulCli.Agent().ServiceRegister(&api.AgentServiceRegistration{
@@ -39,7 +39,7 @@ func AgentService(Address string, Port int) error {
 		Name:    "user_srv",
 		Tags:    []string{"GRPC"},
 		Port:    Port,
-		Address: "10.2.171.94",
+		Address: ip,
 		Check:   check,
 	})
 	if err != nil {
