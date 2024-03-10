@@ -38,8 +38,8 @@ func Registration(register func(g *grpc.Server), cert, key string) error {
 	//}
 	//grpc.Creds(creds)
 	g := grpc.NewServer()
-	ip := GetHostIp()
-	listen, err := net.Listen(global.ConfigAll.Grpc.Agreement, fmt.Sprintf("%v:%s", ip, global.ConfigAll.Grpc.Port))
+	//ip := GetHostIp()
+	listen, err := net.Listen(global.ConfigAll.Grpc.Agreement, fmt.Sprintf("%v:%s", "0.0.0.0", global.ConfigAll.Grpc.Port))
 	if err != nil {
 		zap.S().Panic(err)
 	}
