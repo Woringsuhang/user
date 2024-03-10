@@ -39,7 +39,7 @@ func AgentService(Address string, Port int) error {
 		Name:    "user_srv",
 		Tags:    []string{"GRPC"},
 		Port:    Port,
-		Address: Address,
+		Address: ip,
 		Check:   check,
 	})
 	if err != nil {
