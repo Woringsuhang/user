@@ -3,20 +3,20 @@ package common
 import (
 	"errors"
 	"fmt"
+	"github.com/Woringsuhang/user/grpcs"
 	"github.com/google/uuid"
 	"github.com/hashicorp/consul/api"
-
 	"log"
 )
 
 var ConsulCli *api.Client
 var Srvid string
 
-func ConsulClient() error {
+func ConsulClient(addr string) error {
 	var err error
 
 	ConsulCli, err = api.NewClient(&api.Config{
-		Address: "10.2.171.94:8085",
+		Address: addr,
 	})
 	if err != nil {
 		return errors.New("连接consul客户端失败！" + err.Error())
@@ -26,8 +26,8 @@ func ConsulClient() error {
 
 func AgentService(Address string, Port int) error {
 	Srvid = uuid.New().String()
-	//ip := grpcs.GetHostIp()
-	//log.Println("获取的ip============================", ip)
+	ip := grpcs.GetHostIp()
+	log.Println("获取的ip============================", ip)
 	check := &api.AgentServiceCheck{
 		Interval:                       "5s",
 		Timeout:                        "5s",
