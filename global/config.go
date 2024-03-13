@@ -15,6 +15,7 @@ type Config struct {
 	} `json:"mysql"`
 	Grpc struct {
 		Agreement string `json:"agreement"`
+		Host      string `json:"host"`
 		Port      string `json:"port"`
 	} `json:"grpc"`
 	Consuls struct {

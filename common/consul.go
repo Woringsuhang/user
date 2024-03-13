@@ -55,7 +55,6 @@ func GetIp() (string, error) {
 func AgentService(Address string, Port int) error {
 	Srvid = uuid.New().String()
 	ip, _ := GetIp()
-	log.Println("获取的ip============================", ip)
 	check := &api.AgentServiceCheck{
 		Interval:                       "5s",
 		Timeout:                        "5s",

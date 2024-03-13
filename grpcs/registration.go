@@ -12,8 +12,24 @@ import (
 	"net"
 )
 
+func GetFreePort() (int, error) {
+	addr, err := net.ResolveTCPAddr("tcp", "localhost:0")
+	if err != nil {
+		return 0, err
+	}
+
+	l, err := net.ListenTCP("tcp", addr)
+	if err != nil {
+		return 0, err
+	}
+	defer l.Close()
+
+	return l.Addr().(*net.TCPAddr).Port, nil
+}
 func Registration(register func(g *grpc.Server), cert, key string) error {
 	flag.Parse()
+	//port, _ := common.GetFreePort()
+
 	//grpc中间件
 	//creds, err := credentials.NewServerTLSFromFile(cert, key)
 	//if err != nil {
@@ -22,7 +38,11 @@ func Registration(register func(g *grpc.Server), cert, key string) error {
 	//grpc.Creds(creds)
 	g := grpc.NewServer()
 	//ip := GetHostIp()
-	listen, err := net.Listen(global.ConfigAll.Grpc.Agreement, fmt.Sprintf("%v:%s", "0.0.0.0", global.ConfigAll.Grpc.Port))
+	//port, err := GetFreePort()
+	//if err != nil {
+	//	panic(err)
+	//}
+	listen, err := net.Listen(global.ConfigAll.Grpc.Agreement, fmt.Sprintf("%v:%v", "0.0.0.0", global.ConfigAll.Grpc.Port))
 	if err != nil {
 		zap.S().Panic(err)
 	}
