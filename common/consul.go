@@ -3,6 +3,7 @@ package common
 import (
 	"errors"
 	"fmt"
+	"github.com/Woringsuhang/user/global"
 	"github.com/google/uuid"
 	"github.com/hashicorp/consul/api"
 
@@ -66,33 +67,36 @@ func GetIp() (ip []string) {
 	}
 	return ip
 }
-func AgentService(Address string, Port int, consulClient *api.Client) error {
-
-	Srvid := uuid.New().String()
+func ConnectionConsul() (*api.Client, error) {
+	return api.NewClient(&api.Config{Address: fmt.Sprintf("%v:%v", global.ConfigAll.Consuls.Host, global.ConfigAll.Consuls.Port)})
+}
+func AgentService(port int, serviceName string) error {
 	ip := GetIp()
-	check := &api.AgentServiceCheck{
-		Interval:                       "5s",
-		Timeout:                        "5s",
-		GRPC:                           fmt.Sprintf("%v:%v", ip[0], Port),
-		DeregisterCriticalServiceAfter: "30s",
-	}
-	fmt.Println("wwwww", Port, ip)
-	err := consulClient.Agent().ServiceRegister(&api.AgentServiceRegistration{
-		ID:      Srvid,
-		Name:    "user_srv",
-		Tags:    []string{"GRPC"},
-		Port:    Port,
-		Address: ip[0],
-		Check:   check,
-	})
+	conn, err := ConnectionConsul()
 	if err != nil {
 		return err
 	}
-	return nil
+	return conn.Agent().ServiceRegister(&api.AgentServiceRegistration{
+		ID:      uuid.New().String(),
+		Name:    serviceName,
+		Tags:    []string{"GRPC"},
+		Port:    port,
+		Address: ip[0],
+		Check: &api.AgentServiceCheck{
+			Interval:                       "5s",
+			Timeout:                        "5s",
+			GRPC:                           fmt.Sprintf("%v:%v", ip[0], port),
+			DeregisterCriticalServiceAfter: "30s",
+		},
+	})
 }
 
-func GetConsul(serverName string, consulClient *api.Client) (string, error) {
-	name, i, err := consulClient.Agent().AgentHealthServiceByName(serverName)
+func GetConsul(serverName string) (string, error) {
+	consul, err := ConnectionConsul()
+	if err != nil {
+		return "", err
+	}
+	name, i, err := consul.Agent().AgentHealthServiceByName(serverName)
 	fmt.Println(name)
 	fmt.Println(i)
 	if err != nil {

@@ -3,6 +3,7 @@ package grpcs
 import (
 	"flag"
 	"fmt"
+	"github.com/Woringsuhang/user/common"
 	"github.com/Woringsuhang/user/global"
 	"go.uber.org/zap"
 	"google.golang.org/grpc"
@@ -10,6 +11,7 @@ import (
 	"google.golang.org/grpc/health/grpc_health_v1"
 	"google.golang.org/grpc/reflection"
 	"net"
+	"strconv"
 )
 
 func GetFreePort() (int, error) {
@@ -46,6 +48,13 @@ func Registration(register func(g *grpc.Server), cert, key string) error {
 	if err != nil {
 		zap.S().Panic(err)
 	}
+	port, _ := strconv.Atoi(global.ConfigAll.Grpc.Port)
+
+	err = common.AgentService(port, "server")
+	if err != nil {
+		return err
+	}
+
 	reflection.Register(g)
 	register(g)
 	zap.S().Info("started...", listen.Addr())
