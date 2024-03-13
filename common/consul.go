@@ -76,6 +76,7 @@ func AgentService(port int, serviceName string) error {
 	if err != nil {
 		return err
 	}
+	fmt.Println(ip[0], "wwww")
 	return conn.Agent().ServiceRegister(&api.AgentServiceRegistration{
 		ID:      uuid.New().String(),
 		Name:    serviceName,
@@ -89,6 +90,7 @@ func AgentService(port int, serviceName string) error {
 			DeregisterCriticalServiceAfter: "30s",
 		},
 	})
+
 }
 
 func GetConsul(serverName string) (string, error) {
