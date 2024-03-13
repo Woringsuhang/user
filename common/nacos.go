@@ -16,6 +16,7 @@ import (
 
 func Nacos(dataId, group string) {
 	//create clientConfig
+
 	clientConfig := constant.ClientConfig{
 		NamespaceId:         global.NacosConfig.NamespaceId, //we can create multiple clients with different namespaceId to support multiple namespace.When namespace is public, fill in the blank string here.
 		TimeoutMs:           5000,
@@ -34,71 +35,74 @@ func Nacos(dataId, group string) {
 			Scheme:      "http",
 		},
 	}
-	// Creat Nacos Service Discovery Client
-	namingClient, err := clients.CreateNamingClient(map[string]interface{}{
-		"serverConfigs": []constant.ServerConfig{
-			{
-				IpAddr:      global.NacosConfig.IpAddr,
-				Port:        uint64(global.NacosConfig.Port),
-				ContextPath: "/nacos",
-			},
-		},
-		"clientConfig": clientConfig,
-	})
 
-	if err != nil {
-		log.Fatalf("Failed to create naming client: %v", err)
-	}
+	// Creat Nacos Service Discovery Client
+	//namingClient, err := clients.CreateNamingClient(map[string]interface{}{
+	//	"serverConfigs": []constant.ServerConfig{
+	//		{
+	//			IpAddr:      global.NacosConfig.IpAddr,
+	//			Port:        uint64(global.NacosConfig.Port),
+	//			ContextPath: "/nacos",
+	//		},
+	//	},
+	//	"clientConfig": clientConfig,
+	//})
+
+	//if err != nil {
+	//	log.Fatalf("Failed to create naming client: %v", err)
+	//}
 
 	// Register Service Instance
-	success, err := namingClient.RegisterInstance(vo.RegisterInstanceParam{
-		Ip:          "10.2.171.94",
-		Port:        8085,
-		ServiceName: "2108a",
-		Weight:      1,
-		Enable:      true,
-		Healthy:     true,
-		Ephemeral:   true,
-		Metadata:    map[string]string{},
-	})
-	if err != nil {
-		log.Fatalf("Failed to register instance to nacos: %v", err)
-	}
+	//success, err := namingClient.RegisterInstance(vo.RegisterInstanceParam{
+	//	Ip:          "10.2.171.94",
+	//	Port:        8085,
+	//	ServiceName: "2108a",
+	//	Weight:      1,
+	//	Enable:      true,
+	//	Healthy:     true,
+	//	Ephemeral:   true,
+	//	Metadata:    map[string]string{},
+	//})
+	//if err != nil {
+	//	log.Fatalf("Failed to register instance to nacos: %v", err)
+	//}
 
-	log.Printf("Register instance success: %v", success)
-
+	//log.Printf("Register instance success: %v", success)
+	//fmt.Println(123)
 	// Create config client for dynamic configuration
 	configs, _ := clients.CreateConfigClient(map[string]interface{}{
 		"serverConfigs": serverConfigs,
 		"clientConfig":  clientConfig,
 	})
-	config, err := configs.GetConfig(vo.ConfigParam{
+	fmt.Println(123)
+	config, _ := configs.GetConfig(vo.ConfigParam{
 		DataId: dataId,
 		Group:  group,
 	})
 	fmt.Println(config)
-	if err != nil {
-		log.Printf("Error getting configuration")
-		return
-	}
-	err = json.Unmarshal([]byte(config), &global.ConfigAll)
+	//fmt.Println(config)
+	//if err != nil {
+	//	log.Printf("Error getting configuration")
+	//	return
+	//}
+	json.Unmarshal([]byte(config), &global.ConfigAll)
 	//监听
-	err = configs.ListenConfig(vo.ConfigParam{
-		DataId: "configuration",
-		Group:  "dev",
-		OnChange: func(namespace, group, dataId, data string) {
-			fmt.Println("group:" + group + ",dataId:" + dataId + ",data:" + data)
-			err = json.Unmarshal([]byte(data), &global.ConfigAll.Mysql)
-
-			dns := model.Dns(global.ConfigAll.Mysql.Username, global.ConfigAll.Mysql.Password, global.ConfigAll.Mysql.Host,
-				global.ConfigAll.Mysql.Port, global.ConfigAll.Mysql.Library)
-			updateDbConnection(dns)
-		},
-	})
-
-	if err != nil {
-		panic(err)
-	}
+	//err = configs.ListenConfig(vo.ConfigParam{
+	//	DataId: "configuration",
+	//	Group:  "dev",
+	//	OnChange: func(namespace, group, dataId, data string) {
+	//		fmt.Println("group:" + group + ",dataId:" + dataId + ",data:" + data)
+	//		err = json.Unmarshal([]byte(data), &global.ConfigAll.Mysql)
+	//
+	//		dns := model.Dns(global.ConfigAll.Mysql.Username, global.ConfigAll.Mysql.Password, global.ConfigAll.Mysql.Host,
+	//			global.ConfigAll.Mysql.Port, global.ConfigAll.Mysql.Library)
+	//		updateDbConnection(dns)
+	//	},
+	//})
+	//
+	//if err != nil {
+	//	panic(err)
+	//}
 }
 func updateDbConnection(config string) {
 	// 关闭现有连接池（如果存在）
