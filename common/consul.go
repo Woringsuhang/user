@@ -5,23 +5,21 @@ import (
 	"fmt"
 	"github.com/google/uuid"
 	"github.com/hashicorp/consul/api"
+
 	"log"
 	"net"
 )
 
-var ConsulCli *api.Client
-var Srvid string
-
-func ConsulClient(addr string) error {
+func ConsulClient(addr string) (error, *api.Client) {
 	var err error
 
-	ConsulCli, err = api.NewClient(&api.Config{
+	ConsulCli, err := api.NewClient(&api.Config{
 		Address: addr,
 	})
 	if err != nil {
-		return errors.New("连接consul客户端失败！" + err.Error())
+		return errors.New("连接consul客户端失败！" + err.Error()), nil
 	}
-	return nil
+	return nil, ConsulCli
 }
 func GetIp() (string, error) {
 	interfaces, err := net.Interfaces()
@@ -52,8 +50,9 @@ func GetIp() (string, error) {
 
 	return "", errors.New("Unable to find a valid global unicast IP address")
 }
-func AgentService(Address string, Port int) error {
-	Srvid = uuid.New().String()
+func AgentService(Address string, Port int, consulClient *api.Client) error {
+
+	Srvid := uuid.New().String()
 	ip, _ := GetIp()
 	check := &api.AgentServiceCheck{
 		Interval:                       "5s",
@@ -62,7 +61,7 @@ func AgentService(Address string, Port int) error {
 		DeregisterCriticalServiceAfter: "30s",
 	}
 	fmt.Println("wwwww", Port, ip)
-	err := ConsulCli.Agent().ServiceRegister(&api.AgentServiceRegistration{
+	err := consulClient.Agent().ServiceRegister(&api.AgentServiceRegistration{
 		ID:      Srvid,
 		Name:    "user_srv",
 		Tags:    []string{"GRPC"},
@@ -76,8 +75,8 @@ func AgentService(Address string, Port int) error {
 	return nil
 }
 
-func GetConsul(serverName string) (ip string, port int, err error) {
-	name, i, err := ConsulCli.Agent().AgentHealthServiceByName(serverName)
+func GetConsul(serverName string, consulClient *api.Client) (ip string, port int, err error) {
+	name, i, err := consulClient.Agent().AgentHealthServiceByName(serverName)
 	fmt.Println(name)
 	fmt.Println(i)
 	if err != nil {
