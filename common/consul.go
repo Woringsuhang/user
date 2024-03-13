@@ -6,7 +6,6 @@ import (
 	"github.com/google/uuid"
 	"github.com/hashicorp/consul/api"
 
-	"log"
 	"net"
 )
 
@@ -92,19 +91,13 @@ func AgentService(Address string, Port int, consulClient *api.Client) error {
 	return nil
 }
 
-func GetConsul(serverName string, consulClient *api.Client) (ip string, port int, err error) {
+func GetConsul(serverName string, consulClient *api.Client) (string, error) {
 	name, i, err := consulClient.Agent().AgentHealthServiceByName(serverName)
 	fmt.Println(name)
 	fmt.Println(i)
 	if err != nil {
-		return "", 0, err
+		return "", err
 	}
-	var Ip string
-	var Port int
-	for _, val := range i {
-		Ip = val.Service.Address
-		Port = val.Service.Port
-	}
-	log.Println("端口：lianjie", Ip, Port)
-	return Ip, Port, nil
+
+	return fmt.Sprintf("%v:%v", i[0].Service.Address, i[0].Service.Port), nil
 }
